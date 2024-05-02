@@ -25,17 +25,19 @@ public class PastePageTest {
                 "            git reset $(git commit-tree HEAD^{tree} -m \"Legacy code\")\n" +
                 "            git push origin master --force\n" +
                 " ";
-        pastePage =pastebinHomePage.openHomePage()
+        String title = "how to gain dominance among developers";
+
+        pastePage = pastebinHomePage.openHomePage()
                 .sendKeysToTextArea(codeSnippet)
                 .clickExpirationMenu()
                 .chooseExpirationOption(PasteExpirationEnum.TEN_MINUTES)
                 .clickSyntaxHighlightingMenu()
                 .chooseSyntaxHighlighting("Bash")
-                .inputPasteTitle("how to gain dominance among developers")
+                .inputPasteTitle(title)
                 .clickCreateNewPaste().waitForPageToLoad();
 
         assertEquals(codeSnippet, pastePage.getTextFromTextArea("bash"));
-        assertEquals("how to gain dominance among developers", pastePage.getPasteTitle());
+        assertEquals(title, pastePage.getPasteTitle());
         assertEquals("Bash", pastePage.getHighlightingOption());
     }
 

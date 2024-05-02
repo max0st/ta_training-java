@@ -14,15 +14,17 @@ import java.time.Duration;
 public class PastePage {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
-    @FindBy(xpath = "//a[contains(@class, 'btn') and contains(@class, '-small') and contains(@class, 'h_800')]")
+    @FindBy(xpath = "//a[contains(@class, 'btn') and contains(@class, '-small')]")
     private WebElement syntaxHighlightingOption;
-    @FindBy(xpath = "//h1[text()='how to gain dominance among developers']")
+    @FindBy(xpath = "//div[@class='info-top']//h1\n")
     private WebElement pasteTitle;
+    private final String pastePageTitle;
 
     public PastePage(WebDriver driver) {
         this.driver = driver;
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(5));
         PageFactory.initElements(driver, this);
+        pastePageTitle = driver.getTitle();
     }
 
     public String getTextFromTextArea(String highlightingOption) {
@@ -47,10 +49,9 @@ public class PastePage {
     }
 
     private String removeSuffixFromTitle() {
-        String actualTitle = driver.getTitle();
         String suffix = " - Pastebin.com";
         // Remove the suffix if it exists
-        return actualTitle.endsWith(suffix) ? actualTitle.substring(0, actualTitle.length() - suffix.length()) : actualTitle;
+        return pastePageTitle.endsWith(suffix) ? pastePageTitle.substring(0, pastePageTitle.length() - suffix.length()) : pastePageTitle;
     }
 
     private String getXpathForTextArea(String className) {
