@@ -14,11 +14,11 @@ import java.time.Duration;
 public class PastePage {
     private final WebDriver driver;
     private final WebDriverWait webDriverWait;
+    private final String pastePageTitle;
     @FindBy(xpath = "//a[contains(@class, 'btn') and contains(@class, '-small')]")
     private WebElement syntaxHighlightingOption;
-    @FindBy(xpath = "//div[@class='info-top']//h1\n")
+    @FindBy(xpath = "//div[@class='info-top']//h1")
     private WebElement pasteTitle;
-    private final String pastePageTitle;
 
     public PastePage(WebDriver driver) {
         this.driver = driver;
