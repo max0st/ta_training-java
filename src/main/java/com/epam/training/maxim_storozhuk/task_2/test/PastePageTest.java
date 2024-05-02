@@ -3,6 +3,7 @@ package com.epam.training.maxim_storozhuk.task_2.test;
 import com.epam.training.maxim_storozhuk.task_2.PageObject.PastePage;
 import com.epam.training.maxim_storozhuk.task_2.PageObject.PastebinHomePage;
 import com.epam.training.maxim_storozhuk.task_2.enums.PasteExpirationEnum;
+import com.epam.training.maxim_storozhuk.task_2.testdata.TestConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,23 +22,17 @@ public class PastePageTest {
 
     @Test
     public void pasteCreationTest() {
-        String codeSnippet = "            git config --global user.name  \"New Sheriff in Town\"\n" +
-                "            git reset $(git commit-tree HEAD^{tree} -m \"Legacy code\")\n" +
-                "            git push origin master --force\n" +
-                " ";
-        String title = "how to gain dominance among developers";
-
         pastePage = pastebinHomePage.openHomePage()
-                .sendKeysToTextArea(codeSnippet)
+                .sendKeysToTextArea(TestConstants.CODE_SNIPPET)
                 .clickExpirationMenu()
                 .chooseExpirationOption(PasteExpirationEnum.TEN_MINUTES)
                 .clickSyntaxHighlightingMenu()
                 .chooseSyntaxHighlighting("Bash")
-                .inputPasteTitle(title)
+                .inputPasteTitle(TestConstants.TITLE)
                 .clickCreateNewPaste().waitForPageToLoad();
 
-        assertEquals(codeSnippet, pastePage.getTextFromTextArea("bash"));
-        assertEquals(title, pastePage.getPasteTitle());
+        assertEquals(TestConstants.CODE_SNIPPET, pastePage.getTextFromTextArea("bash"));
+        assertEquals(TestConstants.TITLE, pastePage.getPasteTitle());
         assertEquals("Bash", pastePage.getHighlightingOption());
     }
 
