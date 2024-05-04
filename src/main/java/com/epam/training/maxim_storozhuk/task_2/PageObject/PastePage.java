@@ -48,13 +48,20 @@ public class PastePage {
         return this;
     }
 
+    /**
+     * Removes a specific suffix from the page title if it is present.
+     * This method is intended to clean up the page title by stripping away a standard suffix appended to titles on Pastebin pages.
+     *
+     * @return The title without the standard suffix.
+     */
     private String removeSuffixFromTitle() {
         String suffix = " - Pastebin.com";
-        // Remove the suffix if it exists
+
         return pastePageTitle.endsWith(suffix) ? pastePageTitle.substring(0, pastePageTitle.length() - suffix.length()) : pastePageTitle;
     }
 
     private String getXpathForTextArea(String className) {
         return String.format("//ol[@class='%s']", className);
     }
+
 }

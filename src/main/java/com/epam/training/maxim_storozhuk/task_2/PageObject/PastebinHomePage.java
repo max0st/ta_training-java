@@ -1,6 +1,5 @@
 package com.epam.training.maxim_storozhuk.task_2.PageObject;
 
-import com.epam.training.maxim_storozhuk.task_2.enums.PasteExpirationEnum;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +20,8 @@ public class PastebinHomePage {
 
     @FindBy(xpath = "//*[@id='select2-postform-expiration-container']")
     private WebElement pasteExpirationMenu;
-
+    @FindBy(xpath = "//li[text()='10 Minutes']")
+    private WebElement pasteExpirationTenMinutes;
     @FindBy(xpath = "//input[@id='postform-name']")
     private WebElement titleInput;
 
@@ -61,25 +61,33 @@ public class PastebinHomePage {
         return this;
     }
 
-    public PastebinHomePage chooseExpirationOption(PasteExpirationEnum pasteExpirationEnum) {
-        WebElement expirationOption = webDriver.findElement(By.xpath(pasteExpirationEnum.getExpirationSelector()));
-        waitForElementsToLoad(expirationOption).click();
+    public PastebinHomePage chooseExpirationTenMinutesOption() {
+        waitForElementsToLoad(pasteExpirationTenMinutes).click();
         return this;
     }
 
+
     public PastebinHomePage chooseSyntaxHighlighting(String syntaxHighlightingType) {
-        WebElement syntaxOption = webDriver.findElement(By.xpath(getSyntaxHighlightingXPath(syntaxHighlightingType)));
+        WebElement syntaxOption = webDriver.findElement(By.xpath(getSyntaxTypeXPath(syntaxHighlightingType)));
         waitForElementsToLoad(syntaxOption).click();
         return this;
     }
 
-    private String getSyntaxHighlightingXPath(String syntaxHighlightingType) {
+    private String getSyntaxTypeXPath(String syntaxHighlightingType) {
         return String.format("//li[text()='%s']", syntaxHighlightingType);
     }
 
     public PastebinHomePage inputPasteTitle(String title) {
         titleInput.sendKeys(title);
         return this;
+    }
+
+    public String retrieveCodeSnippet() {
+        return pasteText.getAttribute("value");
+    }
+
+    public String retrieveTitle() {
+        return titleInput.getAttribute("value");
     }
 
     public PastePage clickCreateNewPaste() {
@@ -94,5 +102,4 @@ public class PastebinHomePage {
     private WebElement waitForElementsToLoad(WebElement element) {
         return webDriverWait.until(ExpectedConditions.visibilityOf(element));
     }
-
 }

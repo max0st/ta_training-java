@@ -1,34 +1,44 @@
 package com.epam.training.maxim_storozhuk.task_1.test;
 
 import com.epam.training.maxim_storozhuk.task_1.PageObject.PastebinHomePage;
-import com.epam.training.maxim_storozhuk.task_1.enums.PasteExpirationEnum;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.epam.training.maxim_storozhuk.task_1.testdata.TestConstants;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.time.Duration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class CreationExpirationTimeTest {
-    PastebinHomePage pastebinHomePage;
+    private static PastebinHomePage pastebinHomePage;
 
-    @BeforeEach
-    public void setUp() {
-        pastebinHomePage = new PastebinHomePage(new ChromeDriver(), Duration.ofSeconds(5));
+    @BeforeAll
+    public static void setUp() {
+        pastebinHomePage = new PastebinHomePage(new ChromeDriver());
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        pastebinHomePage.closeBrowser();
     }
 
     @Test
-    public void pasteCreationWithExpirationTest() {
-        pastebinHomePage.startHomePage();
-        pastebinHomePage.sendKeysToTextArea("Hello from WebDriver");
-        pastebinHomePage.clickExpirationMenu();
-        pastebinHomePage.chooseExpirationOption(PasteExpirationEnum.TEN_MINUTES);
-        pastebinHomePage.inputPasteTitle("helloweb");
+    public void pasteCreationTest() {
+        pastebinHomePage.openHomePage()
+                .sendKeysToTextArea(TestConstants.TEXT)
+                .clickExpirationMenu()
+                .chooseExpirationTenMinutesOption()
+                .inputPasteTitle(TestConstants.TITLE);
+
+        verifyInputsAreDisplayedCorrectly();
+
         pastebinHomePage.clickCreateNewPaste();
     }
 
-    @AfterEach
-    public void tearDown() {
-        pastebinHomePage.closeBrowser();
+    private void verifyInputsAreDisplayedCorrectly() {
+        assertEquals(TestConstants.TEXT, pastebinHomePage.retrieveText());
+        assertEquals(TestConstants.TITLE, pastebinHomePage.retrieveTitle());
     }
+
 }

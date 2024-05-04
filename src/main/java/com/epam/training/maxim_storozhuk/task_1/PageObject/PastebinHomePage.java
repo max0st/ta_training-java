@@ -1,61 +1,89 @@
 package com.epam.training.maxim_storozhuk.task_1.PageObject;
 
-import com.epam.training.maxim_storozhuk.task_1.enums.PasteExpirationEnum;
-import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
 public class PastebinHomePage {
+    private static final String HOMEPAGE_URL = "https://pastebin.com/";
     WebDriver webDriver;
     WebDriverWait webDriverWait;
-    By pasteText = By.xpath("//*[@id=\"postform-text\"]");
-    By pasteExpirationMenu = By.xpath("//*[@id=\"select2-postform-expiration-container\"]");
-    By titleInput = By.xpath("//input[@id='postform-name']\n");
-    By createButton = By.xpath("//button[text()='Create New Paste']\n");
+    @FindBy(xpath = "//textarea[@class='textarea -form js-paste-code']")
+    private WebElement pasteText;
 
-    public PastebinHomePage(WebDriver webDriver, Duration duration) {
+    @FindBy(xpath = "//*[@id='select2-postform-expiration-container']")
+    private WebElement pasteExpirationMenu;
+    @FindBy(xpath = "//li[text()='10 Minutes']")
+    private WebElement pasteExpirationTenMinutes;
+    @FindBy(xpath = "//input[@id='postform-name']")
+    private WebElement titleInput;
+
+    @FindBy(xpath = "//button[text()='Create New Paste']")
+    private WebElement createButton;
+
+
+    public PastebinHomePage(WebDriver webDriver) {
         this.webDriver = webDriver;
-        this.webDriverWait = new WebDriverWait(webDriver, duration);
+        this.webDriverWait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+        PageFactory.initElements(webDriver, this);
     }
 
-    public void startHomePage() {
-        webDriver.get("https://pastebin.com/");
+    public PastebinHomePage openHomePage() {
+        webDriver.get(HOMEPAGE_URL);
+        try {
+            waitForElementsToLoad(pasteText);
+        } catch (TimeoutException e) {
+            throw new RuntimeException("The paste text area did not become visible within the expected time.", e);
+        }
+        return this;
     }
 
-    public void sendKeysToTextArea(String text) {
-        waitForElementLocatedByXpath(pasteText).sendKeys(text);
+    public PastebinHomePage sendKeysToTextArea(String text) {
+        pasteText.sendKeys(text);
+        return this;
     }
 
-    public void clickExpirationMenu() {
-        findElement(pasteExpirationMenu).click();
+    public PastebinHomePage clickExpirationMenu() {
+        pasteExpirationMenu.click();
+        return this;
     }
 
-    public void chooseExpirationOption(PasteExpirationEnum pasteExpirationEnum) {
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(pasteExpirationEnum.getExpirationSelector()))).click();
+
+    public PastebinHomePage chooseExpirationTenMinutesOption() {
+        waitForElementsToLoad(pasteExpirationTenMinutes).click();
+        return this;
     }
 
-    public void inputPasteTitle(String title) {
-        findElement(titleInput).sendKeys(title);
+    public PastebinHomePage inputPasteTitle(String title) {
+        titleInput.sendKeys(title);
+        return this;
     }
 
     public void clickCreateNewPaste() {
-        findElement(createButton).click();
+        createButton.click();
     }
+
 
     public void closeBrowser() {
         webDriver.quit();
     }
 
-    private WebElement findElement(By by) {
-        return webDriver.findElement(by);
+    public String retrieveText() {
+        return pasteText.getAttribute("value");
+    }
+
+    public String retrieveTitle() {
+        return titleInput.getAttribute("value");
     }
 
 
-    private WebElement waitForElementLocatedByXpath(By by) {
-        return webDriverWait.until(ExpectedConditions.presenceOfElementLocated(by));
+    private WebElement waitForElementsToLoad(WebElement element) {
+        return webDriverWait.until(ExpectedConditions.visibilityOf(element));
     }
 }
