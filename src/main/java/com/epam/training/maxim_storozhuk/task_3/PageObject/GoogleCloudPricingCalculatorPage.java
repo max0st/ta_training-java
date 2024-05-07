@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.util.function.Function;
 
 public class GoogleCloudPricingCalculatorPage {
+
     private final WebDriver webDriver;
     private final WebDriverWait webDriverWait;
     @FindBy(xpath = "//span[@class='UywwFc-vQzf8d']")
@@ -43,7 +44,7 @@ public class GoogleCloudPricingCalculatorPage {
     private WebElement machineTypeItemN1Standard8;
     @FindBy(xpath = "//button[@aria-label='Add GPUs']//span[@class='eBlXUe-hywKDc']")
     private WebElement btnAddGPU;
-    @FindBy(xpath = "//*[@id='ow4']/div/div/div/div/div/div/div[1]/div/div[2]/div[3]/div[23]/div/div[1]")
+    @FindBy(xpath = "//span[contains(text(),'GPU Model')]/../../following-sibling::div")
     private WebElement menuGPUModel;
     @FindBy(xpath = "//li[@data-value='nvidia-tesla-v100']")
     private WebElement gpuItemTeslaV100Model;
